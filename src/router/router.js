@@ -26,7 +26,7 @@ const routes = [
         ,component: UserProfile
     },
     {
-        path: '/job'
+        path: '/job-list'
         , name: 'JobList'
         , component: JobList
     },

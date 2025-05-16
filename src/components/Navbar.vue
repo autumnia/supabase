@@ -2,19 +2,11 @@
   <nav>
     <h1>{{ title }}</h1>
     <router-link 
-      v-if="currentPath === '/' 
-          || currentPath === '/signup' 
-          || currentPath === '/job-post'
-          || currentPath.startsWith('/job-post-update')
-        "
+      v-if="currentPath === '/' || currentPath === '/signup' || currentPath === '/job-post'|| currentPath.startsWith('/job-post-update')"
       to="/job-list" 
       class="btn-close"
     >
-      <Icon 
-        icon="material-symbols:close" 
-        width="24"
-        style="color: #1e1e1e;"
-      />
+      <Icon icon="material-symbols:close" width="24" style="color: #1e1e1e;"/>
     </router-link>
 
     <!-- job-detail, user-profile 좌측 뒤로가기 아이콘 -->

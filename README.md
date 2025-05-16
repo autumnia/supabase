@@ -8,9 +8,14 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 # intall
 ```
 * npm install
-npm install --save-dev vite
+"@iconify/vue": "^5.0.0",
+"@vitejs/plugin-vue": "^5.2.3",
+"sass": "^1.88.0",
+"vite": "^6.3.5"
+
 npm install --save-dev @vitejs/plugin-vue
 npm install --save-dev sass
+npm install --save-dev vite
 npm install --save-dev @iconify/vue
 
 
