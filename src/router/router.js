@@ -6,6 +6,8 @@ import UserProfile  from '../view/UserProfile.vue'
 import JobList      from '../view/JobList.vue'
 import JobDetail    from '../view/JobDetail.vue'
 import JobPost      from '../view/JobPost.vue'
+import About        from '../view/About.vue'
+
 
 const routes = [
     {
@@ -37,6 +39,11 @@ const routes = [
         path: '/job/post'
         , name: 'JobPost'
         , component: JobPost
+    },
+    {
+        path: '/about'
+        , name: 'About'
+        , component: About
     }
 ]
 
