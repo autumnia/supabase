@@ -2,7 +2,7 @@
   <nav>
     <h1>{{ title }}</h1>
     <router-link 
-      v-if="currentPath === '/' || currentPath === '/signup' || currentPath === '/job-post'|| currentPath.startsWith('/job-post-update')"
+      v-if="currentPath === '/' || currentPath === '/signup' || currentPath === '/job-post'|| currentPath === '/job-post-update' "
       to="/job-list" 
       class="btn-close"
     >
@@ -12,7 +12,7 @@
 
     <!-- job-detail, user-profile 좌측 뒤로가기 아이콘 -->
     <router-link 
-      v-if="currentPath.startsWith('/job-detail') || currentPath === '/user-profile'"
+      v-if="currentPath === '/job-detail' || currentPath === '/user-profile'"
       to="/job-list" 
       class="btn-close"
     >
@@ -26,16 +26,16 @@
     
     <!-- job-list 우측에 배치되는 프로필, 글쓰기 아이콘 -->
     <div class="right-icons" v-if="currentPath === '/job-list'">
-      <router-link to="/user-profile">
+      <router-link to="/job-post"><!-- post -->
         <Icon 
-          icon="teenyicons:user-circle-solid" 
+        icon="mdi:pencil-outline"  
           width="24"
           style="color: #1e1e1e;"
         />
       </router-link>
-      <router-link to="/job-post"><!-- post -->
+      <router-link to="/user-profile">
         <Icon 
-        icon="mdi:pencil-outline"  
+          icon="teenyicons:user-circle-solid" 
           width="24"
           style="color: #1e1e1e;"
         />
@@ -89,8 +89,12 @@
     ['/signup', '회원가입'],
     ['/job-list', '땅콩알바'],
     ['/job-post', '구인등록'],
+    ['/job-post-update', '구인수정'],
+    ['/job-list', '구인목록'],
+    ['/job-detail', '구인상세'],
     ['/user-profile', '프로필'],
   ]);
+
 
   watch(route, (newPath) => {
     currentPath = newPath.path;
@@ -103,4 +107,9 @@
 
   });
 </script>
+
+
+
   
+
+

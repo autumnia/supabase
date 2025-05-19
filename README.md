@@ -19,7 +19,6 @@ npm install --save-dev vite
 npm install --save-dev @iconify/vue
 
 
-
 * 실행
 npm run dev
 ```

@@ -36,7 +36,12 @@ const routes = [
         , component: JobDetail
     },
     {
-        path: '/job/post'
+        path: '/job-post'
+        , name: 'JobPost'
+        , component: JobPost
+    },
+    {
+        path: '/job-post-update'
         , name: 'JobPost'
         , component: JobPost
     },
