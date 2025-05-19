@@ -6,7 +6,8 @@
       to="/job-list" 
       class="btn-close"
     >
-      <Icon icon="material-symbols:close" width="24" style="color: #1e1e1e;"/>
+      <!-- 상단 좌측 닫기 아이콘 -->
+      <Icon icon="material-symbols:close" width="24" style="color: #1e1e1e;"/> 
     </router-link>
 
     <!-- job-detail, user-profile 좌측 뒤로가기 아이콘 -->
@@ -42,40 +43,7 @@
     </div> 
   </nav>
 </template>
-  
-<script setup>
-  import { Icon } from '@iconify/vue';
-  import { useRoute } from 'vue-router';
-  import { watch, ref } from 'vue';
 
-  let route = useRoute();
-  let currentPath = route.path;
-  let title = ref('');
-
-  watch(route, (newPath) => {
-    currentPath = newPath.path;
-    console.log(currentPath);
-    
-    // 경로 별로 제목을 다르게 설정
-    if(currentPath === '/') {
-      title.value = '로그인'; 
-    } else if (currentPath === '/signup') {
-      title.value = '회원가입';
-    } else if (currentPath === '/job-list') {
-      title.value = '땅콩알바';
-    } else if (currentPath.startsWith('/job-detail')) {
-      title.value = '상세보기';
-    } else if (currentPath === '/job-post') {
-      title.value = '구인등록'
-    } else if (currentPath === '/user-profile') {
-      title.value = '프로필'
-    } else if (currentPath.startsWith('/job-post-update')) {
-      title.value = '구인등록 수정'
-    }
-
-  });
-</script>
-  
 <style lang="scss" scoped>
   nav {
     position: relative;
@@ -106,3 +74,33 @@
     gap: 10px;
   }
 </style>
+  
+<script setup>
+  import { Icon } from '@iconify/vue';
+  import { useRoute } from 'vue-router';
+  import { watch, ref } from 'vue';
+
+  let route = useRoute();
+  let currentPath = route.path;
+  let title = ref('');
+
+  const path_map = new Map([
+    ['/', '로그인'],
+    ['/signup', '회원가입'],
+    ['/job-list', '땅콩알바'],
+    ['/job-post', '구인등록'],
+    ['/user-profile', '프로필'],
+  ]);
+
+  watch(route, (newPath) => {
+    currentPath = newPath.path;
+    console.log(currentPath);
+    
+    // 경로 별로 제목을 다르게 설정
+    title.value = path_map.get(currentPath) || '';
+
+
+
+  });
+</script>
+  

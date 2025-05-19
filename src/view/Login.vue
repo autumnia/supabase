@@ -34,6 +34,11 @@
     </div>
   </template>
     
+  <style scoped lang="scss">
+    /* @import "../style/form.scss"; */
+    @use "../style/form.scss";
+  </style>
+
   <script setup>
     import { useRouter } from 'vue-router';
     // import supabase from '../supabase';
@@ -53,8 +58,6 @@
     //     email: email.value,
     //     password: password.value,
     //   })
-  
-
 
       if(error) {
         isLoading.value = false; // 서버 요청 완료 
@@ -71,7 +74,3 @@
   
   </script>
     
-  <style scoped lang="scss">
-    /* @import "../style/form.scss"; */
-    @use "../style/form.scss";
-  </style>

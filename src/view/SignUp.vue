@@ -2,10 +2,12 @@
     <h1>SignUp</h1>
 </template>
     
-<script setup>
-    
-</script>
-    
 <style>
     
 </style>
+
+<script setup>
+    import { useRouter } from 'vue-router';
+    import { ref } from 'vue';   
+</script>
+    
