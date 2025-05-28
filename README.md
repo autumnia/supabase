@@ -17,6 +17,7 @@ npm install --save-dev @vitejs/plugin-vue
 npm install --save-dev sass
 npm install --save-dev vite
 npm install --save-dev @iconify/vue
+npm install --save-dev @supabase/supabase-js
 
 
 * 실행

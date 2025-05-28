@@ -10,6 +10,7 @@
           type="email" 
           id="email" 
           placeholder="이메일 입력"
+          autocomplete="email"
           required
           v-model="email"
         />
@@ -20,6 +21,8 @@
           type="password" 
           id="password" 
           placeholder="비밀번호 입력"
+          autocomplete="new-password"
+          minlength="8"
           required
           v-model="password"
         />
@@ -30,7 +33,10 @@
           type="tel" 
           id="tel" 
           placeholder="010-1234-5678"
-          required
+          autocomplete="tel"  
+          pattern="^01[0-9]-\d{4}-\d{4}$"
+          maxlength="13"
+          required  
           v-model="tel"
         />
       </div>
@@ -81,7 +87,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';   
-// import supabase from '../supabase';
+import supabase from '../supabase';
 
 const router = useRouter();
 const isLoading = ref(false);
@@ -95,36 +101,37 @@ const addr = ref('');
 
 const handle_signup = async () => {
   isLoading.value = true; // 서버 요청 시작
-//   const { data, error } = await supabase.auth.signUp({
-//     email: email.value,
-//     password: password.value,
-//   })
+  
+  // 회원가입 처리  
+  const { data, error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value,
+  })
 
-    // if(error) {
-    //     isLoading.value = false; // 서버 요청 완료 
-    //     alert(error.message);
-    //     return;
-    // } 
+  if(error) {
+      isLoading.value = false; // 서버 요청 완료 
+      alert(error.message);
+      return;
+  } 
 
-    // const { error } = await supabase
-    //     .from('user_table')
-    //     .insert({ 
-    //         tel: tel.value,
-    //         text: text.value,
-    //         name: name.value,
-    //         addr: addr.value,
-    // });
+  console.log( 'data:', data );
+  console.log('회원가입 성공:', data);
 
-    // if(error) { 
-    //     isLoading.value = false; // 서버 요청 완료 
-    //     alert(error.message);
-    //     return;
-    // } 
 
-    alert('회원가입 성공')
-    isLoading.value = false; // 서버 요청 완료
+  // const { error } = await supabase
+  //     .from('user_table')
+  //     .insert({ 
+  //         tel: tel.value,
+  //         text: text.value,
+  //         name: name.value,
+  //         addr: addr.value,
+  // });
 
-    router.push('/');
+
+  alert('회원가입 성공')
+  isLoading.value = false; // 서버 요청 완료
+
+  router.push('/');
 }
 </script>
     
