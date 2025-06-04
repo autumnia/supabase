@@ -22,9 +22,5 @@ export function useAuth() {
     }
   }
 
-  return {
-    user,
-    isLogin,
-    checkLoginStatus
-  }
+  return { user, isLogin, checkLoginStatus }
 }
