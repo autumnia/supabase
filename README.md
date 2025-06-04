@@ -9,6 +9,7 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 ```
 * npm install
 "@iconify/vue": "^5.0.0",
+"@supabase/supabase-js": "^2.49.8",
 "@vitejs/plugin-vue": "^5.2.3",
 "sass": "^1.88.0",
 "vite": "^6.3.5"
