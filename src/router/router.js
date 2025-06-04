@@ -12,49 +12,41 @@ import About        from '../view/About.vue'
 const routes = [
     {
         path: '/'
-        , name: 'Login'
         , component: Login
     },
     {
         path: '/signup'
-        , name: 'SignUp'
         , component: SignUp
     },
     {
-        path: '/user'
-        , name: 'UserProfile'
+        path: '/user-profile'
         ,component: UserProfile
     },
     {
         path: '/job-list'
-        , name: 'JobList'
         , component: JobList
     },
     {
         path: '/job/:id'
-        , name: 'JobDetail'
         , component: JobDetail
     },
     {
         path: '/job-post'
-        , name: 'JobPost'
         , component: JobPost
     },
     {
         path: '/job-post-update'
-        , name: 'JobPost'
         , component: JobPost
     },
     {
         path: '/about'
-        , name: 'About'
         , component: About
     }
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
 })
 
 export default router

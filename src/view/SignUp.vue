@@ -99,6 +99,12 @@ const text = ref('');
 const name = ref('');
 const addr = ref('');
 
+function wheb_error(err, isLoading) {
+  isLoading.value = false; // 서버 요청 완료
+  console.error('Error:', err.message);
+  alert('오류가 발생했습니다: ' + err.message);
+}
+
 const handle_signup = async () => {
   isLoading.value = true; // 서버 요청 시작
   
@@ -108,29 +114,33 @@ const handle_signup = async () => {
     password: password.value,
   })
 
+  // 에러 에러가 발생했을 때
   if(error) {
       isLoading.value = false; // 서버 요청 완료 
       alert(error.message);
       return;
   } 
 
-  console.log( 'data:', data );
-  console.log('회원가입 성공:', data);
+  const { table_error } = await supabase
+    .from('user_table')
+    .insert({ 
+        tel: tel.value,
+        text: text.value,
+        name: name.value,
+        addr: addr.value
+    });
 
+  if ( table_error ) {
+    isLoading.value = false; // 서버 요청 완료
+    alert(table_error.message);
+    return;
+  }
 
-  // const { error } = await supabase
-  //     .from('user_table')
-  //     .insert({ 
-  //         tel: tel.value,
-  //         text: text.value,
-  //         name: name.value,
-  //         addr: addr.value,
-  // });
-
-
+  // console.log('회원가입 성공:', data);
   alert('회원가입 성공')
   isLoading.value = false; // 서버 요청 완료
 
+  // 로그인 후 홈으로 이동
   router.push('/');
 }
 </script>

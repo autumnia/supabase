@@ -2,6 +2,7 @@
     <div class="loading_info" v-if="isLoading">
       <p>로그인 처리중...</p>
     </div>
+
     <div class="form-container">
       <form @submit.prevent="handleLogin">
         <div class="form-group">
@@ -26,6 +27,7 @@
             v-model="password"
           />
         </div>
+
         <button type="submit">로그인</button>
         <router-link to="/signup">회원가입</router-link>
         <span> | </span>
@@ -41,7 +43,7 @@
 
   <script setup>
     import { useRouter } from 'vue-router';
-    // import supabase from '../supabase';
+    import supabase from '../supabase';
     import { ref } from 'vue';
   
     const email = ref('');
@@ -54,22 +56,22 @@
     //   console.log(email.value, password.value);
       isLoading.value = true; // 서버 요청 시작
   
-    //   const { data, error } = await supabase.auth.signInWithPassword({
-    //     email: email.value,
-    //     password: password.value,
-    //   })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.value,
+        password: password.value,
+      })
 
       if(error) {
         isLoading.value = false; // 서버 요청 완료 
         alert(error.message);
         return;
       } 
-    //   else {
-        alert('로그인 성공')
-        console.log(data)
-        isLoading.value = false; // 서버 요청 완료 
-        router.push('/job');
-    //   }
+
+      alert('로그인 성공')
+      // console.log(data)
+      isLoading.value = false; // 서버 요청 완료 
+      
+      router.push('/job-list');
     }
   
   </script>
