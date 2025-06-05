@@ -62,7 +62,7 @@
             type="text" 
             id="company_name" 
             required
-            placeholder="예) 땅콩가게"
+            placeholder="예) 메가존클라우드(주)"
             v-model="company_name" 
           >
         </div>
@@ -74,7 +74,7 @@
             type="text" 
             id="location" 
             required 
-            placeholder="예) 서울시 강남구 논현동"
+            placeholder="예) 서울시 강남구 논현동 메가존"
             v-model="location"
           >
         </div>
@@ -174,7 +174,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Icon } from '@iconify/vue';
-
 import { useAuth } from '../auth/auth';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
@@ -190,9 +189,6 @@ import supabase from '../supabase';
   const tel = ref('');
   const img_url = ref(''); // 첨부한 사진은 storage에 저장하고 url을 저장
 
-  let file = null; // 파일객체 저장 변수
-  const previewImage = ref(null);
-
   // 로그인 상태 확인
   const { isLogin, user, checkLoginStatus } = useAuth();
 
@@ -205,42 +201,44 @@ import supabase from '../supabase';
   const handleSubmit = async () => {
     isLoading.value = true;
 
-    if(previewImage.value) {
-      await uploadImage();
-    }
+    // if(previewImage.value) {
+    //   await uploadImage();
+    // }
 
     const { error } = await supabase.from('job_posts')
         .insert({ 
-            title: title.value,
-            todo: todo.value,
-            pay_rule: pay_rule.value,
-            pay: pay.value,
-            desc: desc.value,
+            title:        title.value,
+            todo:         todo.value,
+            pay_rule:     pay_rule.value,
+            pay:          pay.value,
+            desc:         desc.value,
             company_name: company_name.value,
-            location: location.value,
-            tel: tel.value,
-            img_url: img_url.value,
+            location:     location.value,
+            tel:          tel.value,
+            img_url:      'https://placehold.co/400X250',
         })
 
-        if(error) {
-            alert(error.message || '등록 실패');
-            return;
-        } 
-      
-        alert('등록 성공');
-        isLoading.value = false;
+    if(error) {
+        console.error('등록 실패:', error);
+        alert(error.message || '등록 실패');
+        return;
+    } 
+  
+    alert('등록 성공');
+    isLoading.value = false;
 
-        router.push('/job-list');
+    router.push('/job-list');
   }
 
-
+  let file = null; // 파일객체 저장 변수
+  const previewImage = ref(null);
   const onFileChange = (e) => {
     file = e.target.files[0];
-    console.log(file);
+    // console.log(file);
 
     if(file) {
       previewImage.value = URL.createObjectURL(file);
-      console.log(previewImage.value);
+      console.log('미리보기이미지: {}', previewImage.value);
     }
   }
 
@@ -248,40 +246,40 @@ import supabase from '../supabase';
     const { data, error } = await supabase
       .storage
       .from('images')
-      .upload(file.name, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
+      .upload (file.name, file, {cacheControl: '3600', upsert: false } )
     
-      if(error) {
-        alert('업로드 오류');
-      } else {
-        console.log('uploaded file:', data)
-        // 이미지 url 가져오기
-        const { data:imgData } = supabase
+    if(error) {
+      console.log('file upload error:', file);
+      console.log('업로드 오류:', error);
+      alert('업로드 오류');
+    }
+    else {
+      console.log('uploaded file:', data)
+      // 이미지 url 가져오기
+      const { data: imgData } = supabase
         .storage
         .from('images')
         .getPublicUrl(file.name)
-        console.log('file url:', imgData.publicUrl)
+      console.log('file url:', imgData.publicUrl)
 
-        // 테이블에 저장할 이미지 URL 변수
-        img_url.value = imgData.publicUrl;
-      }
+      // 테이블에 저장할 이미지 URL 변수
+      img_url.value = imgData.publicUrl;
+      console.log('img_url:', img_url.value);
+    }
 
   }
 
   // 마운트시 로그인 상태 확인하기
   onMounted(async() => {
-
     await checkLoginStatus();
     // console.log('auth 정보', isLogin.value, user.value.email);
   })
 
-  onUnmounted(() => {
-    console.log('unmounted');
+  onUnmounted( () => {
+    // console.log('unmounted');
     // 메모리 누수 방지
     if(previewImage.value) {
       URL.revokeObjectURL(previewImage.value);
     }
-  })
+  } )
 </script>
