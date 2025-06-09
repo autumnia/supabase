@@ -1,7 +1,7 @@
 <template>
   <ul class="job-list" v-if="posts.length > 0">
     <li class="job-item" v-for="post in posts" :key="post.id">
-      <router-link :to="`/job-detail/${post.id}`">
+      <router-link :to="`/job/${post.id}`">
         <div class="header">
           <h3>{{ post.title }}</h3>
           <!-- 업체명 추가해 주세요 -->
@@ -25,7 +25,7 @@
 <script setup>
   import supabase from '../supabase';
   import { ref, onMounted } from 'vue';
-  import { format } from "date-fns";
+  // import { format } from "date-fns";
 
   const posts = ref([]);
 

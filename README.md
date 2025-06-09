@@ -19,7 +19,7 @@ npm install --save-dev sass
 npm install --save-dev vite
 npm install --save-dev @iconify/vue
 npm install --save-dev @supabase/supabase-js
-
+npm install date-fns
 
 * 실행
 npm run dev
