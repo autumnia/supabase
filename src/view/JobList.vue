@@ -1,7 +1,7 @@
 <template>
   <ul class="job-list" v-if="posts.length > 0">
     <li class="job-item" v-for="post in posts" :key="post.id">
-      <router-link :to="`/job/${post.id}`">
+      <router-link :to="`/job-detail/${post.id}`">
         <div class="header">
           <h3>{{ post.title }}</h3>
           <!-- 업체명 추가해 주세요 -->
