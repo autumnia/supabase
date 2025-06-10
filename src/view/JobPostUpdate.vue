@@ -108,6 +108,72 @@
   </div>
 </template>
 
+<style lang="scss" scoped>
+  @use "../style/form.scss";
+
+  .form-container {
+    margin-top: 20px;
+    padding-bottom: 50px;
+
+    .tab-group {
+      display: flex;
+      gap: 15px;
+      label { 
+        flex: 1;
+        border: 1px solid var(--main-color-dark);
+        border-radius: 8px;
+        text-align: center;
+        padding: 12px;
+      }
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    input[type="radio"]:nth-child(1):checked ~ .tab-group label:nth-child(1) {
+      background: var(--main-color-dark);
+      color: #fff;
+    }
+
+    input[type="radio"]:nth-child(2):checked ~ .tab-group label:nth-child(2) {
+      background: var(--main-color-dark);
+      color: #fff;
+    }
+
+    #pay { margin-top: 8px;}
+
+    // for=photo를 가진 form-group의 후손 input의 보더 스타일 제거
+    .form-group:has(label[for=photo]) input {
+      border: none;
+    }
+
+    //file 아이콘
+    label[for=photo] {
+      figure { 
+        display: flex; 
+        align-items: center;
+        img { 
+          // border: 1px solid red;
+          margin-left: 30px; 
+        }
+      }
+    }
+    input[type="file"] {
+      display: none;
+    }
+  }
+
+  .btn-submit {
+    background: var(--main-color-light);
+  }
+
+  .form-group:has(label[for=photo]) {
+    padding-bottom: 25px;
+    border-bottom: 5px solid #ccc;
+  }
+</style>
+
 <script setup>
   import { useAuth } from '../auth/auth';
   import { useRouter, useRoute } from 'vue-router';
@@ -256,68 +322,3 @@
   })
 </script>
   
-<style lang="scss" scoped>
-  @use "../style/form.scss";
-
-  .form-container {
-    margin-top: 20px;
-    padding-bottom: 50px;
-
-    .tab-group {
-      display: flex;
-      gap: 15px;
-      label { 
-        flex: 1;
-        border: 1px solid var(--main-color-dark);
-        border-radius: 8px;
-        text-align: center;
-        padding: 12px;
-      }
-    }
-
-    input[type="radio"] {
-        display: none;
-    }
-
-    input[type="radio"]:nth-child(1):checked ~ .tab-group label:nth-child(1) {
-      background: var(--main-color-dark);
-      color: #fff;
-    }
-
-    input[type="radio"]:nth-child(2):checked ~ .tab-group label:nth-child(2) {
-      background: var(--main-color-dark);
-      color: #fff;
-    }
-
-    #pay { margin-top: 8px;}
-
-    // for=photo를 가진 form-group의 후손 input의 보더 스타일 제거
-    .form-group:has(label[for=photo]) input {
-      border: none;
-    }
-
-    //file 아이콘
-    label[for=photo] {
-      figure { 
-        display: flex; 
-        align-items: center;
-        img { 
-          // border: 1px solid red;
-          margin-left: 30px; 
-        }
-      }
-    }
-    input[type="file"] {
-      display: none;
-    }
-  }
-
-  .btn-submit {
-    background: var(--main-color-light);
-  }
-
-  .form-group:has(label[for=photo]) {
-    padding-bottom: 25px;
-    border-bottom: 5px solid #ccc;
-  }
-</style>

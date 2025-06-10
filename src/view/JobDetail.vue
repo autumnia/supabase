@@ -23,14 +23,14 @@
       </div>
 
       <!-- 하단 고정 버튼 -->
-      <!-- 본인 -->
+      <!-- 타인 -->
       <div class="bottom-btn-group" v-if="post && post.author !== user.id">
         <a class="btn-tel" :href="`tel:${post.tel}`">전화문의</a>
         <button class="btn-apply-disable" v-if="isApplied">지원완료</button>
         <button class="btn-apply" @click="handleApply" v-if="!isApplied">지원하기</button>
       </div>
 
-      <!-- 타인 -->
+      <!-- 내글 -->
       <div class="bottom-btn-group" v-if="post && post.author === user.id">
         <router-link class="btn-tel" :to="`/job-post-update/${post.id}`">수정</router-link>
         <button class="btn-apply" @click="handelDelete">삭제</button>
@@ -180,7 +180,7 @@ const { data, error } = await supabase
   .single();
 
   if(error) {
-    alert('오류가 발생했습니다');
+    alert('지원 오류가 발생했습니다');
     return;
   }
   console.log('user data:', data)
@@ -198,11 +198,14 @@ const { error: err } = await supabase
   })
 
   if(err) {
-    alert('오류가 발생했습니다');
-  } else {
+    alert('지원저장 오류가 발생했습니다');
+    return;
+  } 
+  
+  // else {
     alert('지원이 완료되었습니다.');
     router.push('/job-list');
-  }
+  // }
 
 // 지원이 완료되면 글목록으로 이동
 
@@ -235,11 +238,14 @@ const handelDelete = async () => {
     .eq('id', id)
 
     if(error) {
-      alert('글삭제 실패')
-    } else {
+      alert('글삭제 실패');
+      return;
+    } 
+    
+    // else {
       alert('삭제 완료');
       router.push('/job-list');
-    }
+    // }
 
 }
 

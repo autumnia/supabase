@@ -83,37 +83,65 @@
 </style>
   
 <script setup>
-  import { Icon } from '@iconify/vue';
-  import { useRoute } from 'vue-router';
-  import { watch, ref } from 'vue';
+import { Icon } from '@iconify/vue';
+import { useRoute } from 'vue-router';
+import { watch, ref } from 'vue';
 
-  let route = useRoute();
-  let currentPath = route.path;
-  let title = ref('');
+let route = useRoute();
+let currentPath = route.path;
+let title = ref('');
+
+const exactMatchMap = new Map([
+  ['/', '로그인'],
+  ['/signup', '회원가입'],
+  ['/user-profile', '프로필'],
+  ['/job-list', '구인조회'],
+  ['/job-post', '구인등록'],
+  ['/about', '회사소개'],
+]);
+
+const startsWithMap = [
+{ prefix: '/job-detail', title: '상세보기' },
+{ prefix: '/job-post-update', title: '구인등록 수정' },
+];
 
 
-  watch(route, (newPath) => {
-    currentPath = newPath.path;
-    // console.log(currentPath);
-    
-    // 경로 별로 제목을 다르게 설정
-    if(currentPath === '/') {
-      title.value = '로그인'; 
-    } else if (currentPath === '/signup') {
-      title.value = '회원가입';
-    } else if (currentPath === '/job-list') {
-      title.value = '땅콩알바';
-    } else if (currentPath.startsWith('/job-detail')) {
-      title.value = '상세보기';
-    } else if (currentPath === '/job-post') {
-      title.value = '구인등록'
-    } else if (currentPath === '/user-profile') {
-      title.value = '프로필'
-    } else if (currentPath.startsWith('/job-post-update')) {
-      title.value = '구인등록 수정'
+watch(route, (newPath) => {
+  currentPath = newPath.path;
+  // console.log(currentPath);
+  
+  // 경로 별로 제목을 다르게 설정
+  title.value = '페이지';
+
+  // 정확히 일치하는 경로 먼저 확인
+  if (exactMatchMap.has(currentPath)) {
+    title.value = exactMatchMap.get(currentPath);
+  } 
+  else {
+    // startsWith 조건 확인
+    const matched = startsWithMap.find(item => currentPath.startsWith(item.prefix));
+    if (matched) {
+      title.value = matched.title;
     }
+  }
 
-  });
+  // if(currentPath === '/') {
+  //   title.value = '로그인'; 
+  // } else if (currentPath === '/signup') {
+  //   title.value = '회원가입';
+  // } else if (currentPath === '/job-list') {
+  //   title.value = '구인조회';
+  // } else if (currentPath.startsWith('/job-detail')) {
+  //   title.value = '상세보기';
+  // } else if (currentPath === '/job-post') {
+  //   title.value = '구인등록'
+  // } else if (currentPath === '/user-profile') {
+  //   title.value = '프로필'
+  // } else if (currentPath.startsWith('/job-post-update')) {
+  //   title.value = '구인등록 수정'
+  // }
+
+});
 </script>
 
 
