@@ -1,5 +1,6 @@
 <template>
     <section v-if="isLogin && post">
+      <!-- 상단이미지 -->
       <figure v-if="post.img_url">
         <img :src="post.img_url" alt="head image">
       </figure>
@@ -7,22 +8,29 @@
       <!-- 상세정보 -->
       <div class="container" v-if="post">
         <h2>{{ post.title }}</h2>
+      
         <p class="top_info">
           {{ post.company_name }}
           <span>&middot;</span>
           {{ post.location }}
         </p>
+
         <p class="pay">
           {{ post.pay_rule }}: <b>{{ post.pay.toLocaleString() }}</b>
         </p>
+
         <textarea class="desc" rows="5" disabled>{{ post.desc }}</textarea>
       </div>
+
       <!-- 하단 고정 버튼 -->
+      <!-- 본인 -->
       <div class="bottom-btn-group" v-if="post && post.author !== user.id">
         <a class="btn-tel" :href="`tel:${post.tel}`">전화문의</a>
         <button class="btn-apply-disable" v-if="isApplied">지원완료</button>
         <button class="btn-apply" @click="handleApply" v-if="!isApplied">지원하기</button>
       </div>
+
+      <!-- 타인 -->
       <div class="bottom-btn-group" v-if="post && post.author === user.id">
         <router-link class="btn-tel" :to="`/job-post-update/${post.id}`">수정</router-link>
         <button class="btn-apply" @click="handelDelete">삭제</button>
@@ -104,19 +112,44 @@ h2 {
 </style>
 
 <script setup>
-import { useAuth } from '../auth/auth';
 import { useRoute, useRouter } from 'vue-router';
 import supabase from '../supabase';
+import { useAuth } from '../auth/auth';
 import { ref, onMounted } from 'vue';
 
-const { isLogin, user, checkLoginStatus } = useAuth(); // 로그인 상태 확인 함수 가져오기
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
 const post = ref(null); // 글 데이터 저장 변수
+const { isLogin, user, checkLoginStatus } = useAuth(); // 로그인 상태 확인 함수 가져오기
 const isApplied = ref(false); // 지원내역 확인 변수
 
-console.log(route.params.id);
+// console.log(route.params.id);
+
+// DB에서 글 가져오기
+onMounted(async () => {
+  await checkLoginStatus();
+
+  // 로그인 상태일 때만 데이터 가져오기
+  if (user.value) {
+    const { data, error } = await supabase
+      .from('job_posts')
+      .select()
+      .eq('id', id)
+      .single()
+
+    post.value = data;
+    console.log(post.value);
+
+    if (error) {
+      alert('글 가져오기 실패');
+      return;
+    }
+  }
+
+  // 지원내역 확인
+  checkApply();
+});    
 
 // 지원내역 확인 함수
 const checkApply = async () => {
@@ -210,28 +243,7 @@ const handelDelete = async () => {
 
 }
 
-// DB에서 글 가져오기
-onMounted(async () => {
-  await checkLoginStatus();
 
-  // 로그인 상태일 때만 데이터 가져오기
-  if (user.value) {
-    const { data, error } = await supabase
-      .from('job_posts')
-      .select()
-      .eq('id', id)
-      .single()
-
-    post.value = data;
-    console.log(post.value);
-
-    if (error) {
-      alert('글 가져오기 실패');
-    }
-  }
-
-  // 지원내역 확인
-  checkApply();
-});    
 </script>
-    
+
+

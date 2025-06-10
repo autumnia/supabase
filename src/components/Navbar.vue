@@ -2,17 +2,24 @@
   <nav>
     <h1>{{ title }}</h1>
     <router-link 
-      v-if="currentPath === '/' || currentPath === '/signup' || currentPath === '/job-post'|| currentPath === '/job-post-update' "
+      v-if="currentPath === '/' 
+          || currentPath === '/signup' 
+          || currentPath === '/job-post'
+          || currentPath.startsWith('/job-post-update')
+        "
       to="/job-list" 
       class="btn-close"
     >
-      <!-- 상단 좌측 닫기 아이콘 -->
-      <Icon icon="material-symbols:close" width="24" style="color: #1e1e1e;"/> 
+      <Icon 
+        icon="material-symbols:close" 
+        width="24"
+        style="color: #1e1e1e;"
+      />
     </router-link>
 
     <!-- job-detail, user-profile 좌측 뒤로가기 아이콘 -->
     <router-link 
-      v-if="currentPath === '/job-detail' || currentPath === '/user-profile'"
+      v-if="currentPath.startsWith('/job-detail') || currentPath === '/user-profile'"
       to="/job-list" 
       class="btn-close"
     >
@@ -84,26 +91,27 @@
   let currentPath = route.path;
   let title = ref('');
 
-  const path_map = new Map([
-    ['/', '로그인'],
-    ['/signup', '회원가입'],
-    ['/job-list', '땅콩알바'],
-    ['/job-post', '구인등록'],
-    ['/job-post-update', '구인수정'],
-    ['/job-list', '구인목록'],
-    ['/job-detail', '구인상세'],
-    ['/user-profile', '프로필'],
-  ]);
-
 
   watch(route, (newPath) => {
     currentPath = newPath.path;
-    console.log(currentPath);
+    // console.log(currentPath);
     
     // 경로 별로 제목을 다르게 설정
-    title.value = path_map.get(currentPath) || '';
-
-
+    if(currentPath === '/') {
+      title.value = '로그인'; 
+    } else if (currentPath === '/signup') {
+      title.value = '회원가입';
+    } else if (currentPath === '/job-list') {
+      title.value = '땅콩알바';
+    } else if (currentPath.startsWith('/job-detail')) {
+      title.value = '상세보기';
+    } else if (currentPath === '/job-post') {
+      title.value = '구인등록'
+    } else if (currentPath === '/user-profile') {
+      title.value = '프로필'
+    } else if (currentPath.startsWith('/job-post-update')) {
+      title.value = '구인등록 수정'
+    }
 
   });
 </script>

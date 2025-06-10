@@ -35,7 +35,7 @@ const routes = [
         , component: JobPost
     },
     {
-        path: '/job-post-update'
+        path: '/job-post-update/:id'
         , component: JobPost
     },
     {

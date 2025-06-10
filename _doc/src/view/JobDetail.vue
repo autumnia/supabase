@@ -92,10 +92,13 @@ const { error: err } = await supabase
 
   if(err) {
     alert('오류가 발생했습니다');
-  } else {
+    return;
+  } 
+
+  // else {
     alert('지원이 완료되었습니다.');
     router.push('/job-list');
-  }
+  // }
 
 // 지원이 완료되면 글목록으로 이동
 
