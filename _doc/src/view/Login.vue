@@ -31,7 +31,14 @@
     </form>
   </div>
 </template>
-  
+
+
+<style scoped lang="scss">
+  /* @import "../style/form.scss"; */
+  @use "../style/form.scss";
+</style>
+
+
 <script setup>
   import { useRouter } from 'vue-router';
   import supabase from '../supabase';
@@ -64,7 +71,3 @@
 
 </script>
   
-<style scoped lang="scss">
-  /* @import "../style/form.scss"; */
-  @use "../style/form.scss";
-</style>

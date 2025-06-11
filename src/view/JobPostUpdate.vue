@@ -185,7 +185,8 @@
   const router = useRouter(); // 페이지 이동 모듈
   const route = useRoute(); // param 또는 경로 참조
   const isLoading = ref(false);
-  console.log('params:', route.params.id);
+
+  // console.log('JobPostUpdate params:', route.params.id);
 
   // 입력 항목
   const title = ref('');
@@ -198,30 +199,34 @@
   const tel = ref('');
   const img_url = ref('');
   const prev_img_url = ref(''); // 이전 이미지 url 
- 
   const previewImage = ref(null); // 미리보기 이미지 변수
-  let file = null; // 파일 객체
+ 
+   let file = null; // 파일 객체
   
   const handleSubmit = async () => {
     isLoading.value = true;
 
-    if(previewImage.value) {
-      // 기존 이미지 파일과 다른 경우(새로 첨부)
-      if(!prev_img_url.value.includes(file.name)) {
-        await uploadImage();
+    // if(previewImage.value) {
+    //   // 기존 이미지 파일과 다른 경우(새로 첨부)
+    //   if(!prev_img_url.value.includes(file.name)) {
+    //     await uploadImage();
 
-        // 기존 이미지 삭제
-        const { data, error } = await supabase
-          .storage
-          .from('images')
-          .remove([prev_img_url.value.split('/').pop()])
-      } else {
-        // 파일 미첨부시 이전 이미지 사용
-        img_url.value = prev_img_url.value;
-      }
-    }
+    //     // 기존 이미지 삭제
+    //     const { data, error } = await supabase
+    //       .storage
+    //       .from('images')
+    //       .remove([prev_img_url.value.split('/').pop()])
+    //   } 
+    //   else {
+    //     // 파일 미첨부시 이전 이미지 사용
+    //     img_url.value = prev_img_url.value;
+    //   }
+    // }
+
+
 
     // job_posts 테이블 수정
+   
     const { error } = await supabase
       .from('job_posts')
       .update({ 
@@ -239,17 +244,20 @@
 
       if(error) {
         alert(error.message || '글수정 실패');
-      } else {
-        alert('글수정 성공');
-        router.push('/job-list');
-      }
+        return;
+      } 
       
-    isLoading.value = false;
+      // else {
+        alert('글수정 성공');
+        isLoading.value = false;
+
+        router.push('/job-list');
+      // }
   }
 
   const onFileChange = (e) => {
     file = e.target.files[0];
-    console.log(file);
+    console.log('file:', file);
 
     if(file) {
       previewImage.value = URL.createObjectURL(file);
@@ -263,21 +271,21 @@
       .from('job_posts')
       .select()
       .eq('id', route.params.id)
-      .single()
-    console.log('post: ', data);
+      .single();
+
+    // console.log('post-update data: ', data);
 
     // 가져온 데이터를 상태 변수에 저장하여 폼에 표시
-    title.value = data.title;
-    todo.value = data.todo;
-    pay_rule.value = data.pay_rule;
-    pay.value = data.pay;
-    desc.value = data.desc
-    company_name.value = data.company_name;
-    location.value = data.location;
-    tel.value = data.tel;
-    previewImage.value = data.img_url;
-
-    prev_img_url.value = data.img_url; // 이전 이미지 URL
+    title.value         = data.title;
+    todo.value          = data.todo;
+    pay_rule.value      = data.pay_rule;
+    pay.value           = data.pay;
+    desc.value          = data.desc
+    company_name.value  = data.company_name;
+    location.value      = data.location;
+    tel.value           = data.tel;
+    previewImage.value  = data.img_url;
+    prev_img_url.value  = data.img_url; // 이전 이미지 URL
   }
 
   const uploadImage = async () => {
@@ -291,7 +299,10 @@
     
       if(error) {
         alert('업로드 오류');
-      } else {
+        return;
+      }
+
+      //  else {
         console.log('uploaded file:', data)
         // 이미지 url 가져오기
         const { data:imgData } = supabase
@@ -302,19 +313,18 @@
 
         // 테이블에 저장할 이미지 URL 변수
         img_url.value = imgData.publicUrl;
-      }
+      // }
   }
 
   // 마운트시 로그인 상태 확인하기
   onMounted(async() => {
-
     await checkLoginStatus();
     getPost()
     // console.log('auth 정보', isLogin.value, user.value.email);
   })
 
   onUnmounted(() => {
-    console.log('unmounted');
+    console.log('post-update unmounted');
     // 메모리 누수 방지
     if(previewImage.value) {
       URL.revokeObjectURL(previewImage.value);

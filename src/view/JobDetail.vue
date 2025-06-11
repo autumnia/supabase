@@ -92,6 +92,7 @@ h2 {
     padding-bottom: 14px;
     margin: 0;
     cursor: pointer;
+    //  추가
     text-align: center;
     color: #fff;
     text-decoration: none;
@@ -102,7 +103,7 @@ h2 {
   }
 
   .btn-apply {
-    background-color: var(--main-color-light);
+    background-color: var(--main-color-dark);
   }
 
   .btn-apply-disable {
@@ -159,6 +160,8 @@ const checkApply = async () => {
     .eq('applicant_id', user.value.id)
     .eq('post_id', id);
 
+    // console.log('지원내역확인 함수 error:', error);
+
     if(error) {
       alert('오류가 발생했습니다');
       return;
@@ -169,64 +172,76 @@ const checkApply = async () => {
     }
 }
 
-// 지원하기 함수
-const handleApply = async () => {
-
-// 유저 데이터에서 이름과 전화번호 가져오기(user_table에서 가져와야 됨)
-const { data, error } = await supabase
+async function get_userinfo(  ) {
+  const { data, error } = await supabase
   .from('user_table')
   .select()
   .eq('id', user.value.id) 
   .single();
 
   if(error) {
-    alert('지원 오류가 발생했습니다');
+    alert('오류가 발생했습니다');
     return;
-  }
-  console.log('user data:', data)
+  }  
 
-// 지원내역 저장
-const { error: err } = await supabase
-  .from('job_apply_list')
-  .insert({
-    job_title: post.value.title, // 글 제목
-    employer_id: post.value.author, // 고용주: 글 작성자 ID
-    applicant_id: user.value.id, // 지원자: 현재 로그인한 사용자 ID
-    applicant_name: data.name, // 지원자: 현재 로그인한 사용자 이름
-    applicant_tel: data.tel, // 지원자: 현재 로그인한 사용자 전화번호
-    post_id: post.value.id, // 고용주가 게시한 글 ID
-  })
+  return {data};
+}
 
-  if(err) {
+async function apply_for_job( {  data } ) {
+  const { error } = await supabase
+    .from('job_apply_list')
+    .insert({
+      job_title:      post.value.title,
+      employer_id:    post.value.author,
+      applicant_id:   user.value.id,
+      applicant_name: data.name,
+      applicant_tel:  data.tel,
+      post_id:        post.value.id,
+    });
+
+  if(error) {
     alert('지원저장 오류가 발생했습니다');
     return;
   } 
+}
+
+
+// 지원하기 함수
+const handleApply = async () => {
+  // 유저 데이터에서 이름과 전화번호 가져오기(user_table에서 가져와야 됨)
+  const { data } = await get_userinfo(  );
+
+  // 지원내역 저장
+  await apply_for_job({  data });
   
-  // else {
-    alert('지원이 완료되었습니다.');
-    router.push('/job-list');
-  // }
+  // 잘 처리 되었으면 확인 메시지를 보여 준다. 
+  alert('지원이 완료되었습니다.');
 
-// 지원이 완료되면 글목록으로 이동
-
+  // 지원이 완료되면 글목록으로 이동
+  router.push('/job-list');
 };
 
 // 이미지 삭제 함수
 const deleteImage = async () => {
-  if(post.value.img_url) {
+  if(!post.value.img_url || post.value.img_url === '') {
+    alert('삭제할 이미지가 없습니다.');
+    return;
+  }
+
+  // if(post.value.img_url) {
     const { data, error } = await supabase
       .storage
       .from('images')
       .remove([post.value.img_url.split('/').pop()]);
     if(error) console.log('이미지 삭제 실패');
-  }
+  // }
 }
 
 // 글삭제 함수
 const handelDelete = async () => {
-  const conf = confirm('정말 삭제하시겠습니까?')
+  const cnfm = confirm('정말 삭제하시겠습니까?')
 
-  if (!conf) return;
+  if (!cnfm) return;
 
   // 이미지 삭제
   await deleteImage()

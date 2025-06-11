@@ -119,7 +119,12 @@ watch(route, (newPath) => {
   } 
   else {
     // startsWith 조건 확인
-    const matched = startsWithMap.find(item => currentPath.startsWith(item.prefix));
+    const matched = startsWithMap.find( 
+      item => currentPath.startsWith(item.prefix)
+    );
+
+    // console.log('matched:', matched);
+    
     if (matched) {
       title.value = matched.title;
     }

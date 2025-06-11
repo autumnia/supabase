@@ -6,7 +6,7 @@
 
     <!-- 상세정보 -->
     <div class="container" v-if="post">
-      <h2>{{ post.title }}</h2>
+      <h2>{{ post.title }}</h2>btn-apply
       <p class="top_info">
         {{ post.company_name }}
         <span>&middot;</span>
