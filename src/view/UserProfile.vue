@@ -138,15 +138,13 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';  
 import { useAuth } from '../auth/auth'; // 로그인 상태 확인 함수 가져오기
 
-const { isLogin, user, checkLoginStatus } = useAuth(); // 로그인 상태 확인 함수 가져오기
+const { user, isLogin, checkLoginStatus } = useAuth(); // 로그인 상태 확인 함수 가져오기
 const router = useRouter()
 
 const name = ref('사용자 이름');
 const addr = ref('사용자 주소');
 const text = ref('자기소개 내용');
 
-const job_apply_list = ref([]);
-const job_recieve_list = ref([]);
 
 const handleLogout = async () => {
     const { error } = await supabase.auth.signOut()
@@ -161,24 +159,46 @@ const handleLogout = async () => {
 }
 
 
-async function check_user_auth() {
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-        alert('로그인 후 이용해 주세요');
-        isLogin.value = false;
-        router.push('/');
-        return null;
-    }
-
-    return user;
+// 지원내역 가져오는 함수
+const job_apply_list = ref([]);
+const getApplyList = async () => {
+  const { data, error } = await supabase
+    .from('job_apply_list')
+    .select()
+    .eq('applicant_id', user.value.id)
+  
+    if(error) {
+      alert('지원내역 가져오기 실패');
+      return;
+    } 
+    // else {
+      job_apply_list.value = data;
+      // console.log('', job_apply_list.value);
+    // }
 }
 
-async function get_user_info(userId) {
+// 받은 지원내역 가져오는 함수
+const job_recieve_list = ref([]);
+const getRecieveList = async () => {
+  const { data, error } = await supabase
+    .from('job_apply_list')
+    .select()
+    .eq('employer_id', user.value.id)
+  
+    if(error) {
+      alert('받은 지원내역 가져오기 실패');
+    } else {
+      job_recieve_list.value = data;
+      console.log('job_recieve_list:', job_recieve_list.value);
+    }  
+}
+
+
+async function get_user_info() {
     const { data, error } = await supabase
         .from('user_table')
         .select('name, addr, text')
-        .eq('id', userId)
+        .eq('id', user.value.id)
         .single();
 
     if (!data) {
@@ -186,19 +206,20 @@ async function get_user_info(userId) {
         return null;
     }
 
-    return data;
-}
-
-// 마운트시 사용자 정보 가져오기
-onMounted(async() => {
-    const user = await check_user_auth();
-    const data = await get_user_info(user.id);
-
     name.value = data.name;
     addr.value = data.addr;
     text.value = data.text;
+}
 
-    console.log('로그인 상태');
+
+// 마운트시 사용자 정보 가져오기
+onMounted(async() => {
+    await checkLoginStatus();
+    await getApplyList();
+    await getRecieveList();
+    await get_user_info();
+
+    // console.log('로그인 상태');
     isLogin.value = true;
 });
 
