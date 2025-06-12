@@ -127,7 +127,8 @@ const isApplied = ref(false); // 지원내역 확인 변수
 
 // console.log(route.params.id);
 
-// DB에서 글 가져오기
+
+// 1. DB에서 글 가져오기
 onMounted(async () => {
   await checkLoginStatus();
 
@@ -206,7 +207,7 @@ async function apply_for_job( {  data } ) {
 }
 
 
-// 지원하기 함수
+// 2. 지원하기 함수
 const handleApply = async () => {
   // 유저 데이터에서 이름과 전화번호 가져오기(user_table에서 가져와야 됨)
   const { data } = await get_userinfo(  );
