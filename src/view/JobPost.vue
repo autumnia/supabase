@@ -179,18 +179,6 @@ import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 
 
-// import { S3Client } from '@aws-sdk/client-s3';
-// const client = new S3Client({
-//   forcePathStyle: true,
-//   region: 'ap-northeast-2',
-//   endpoint: 'https://jbqhxcketugieufneotb.supabase.co/storage/v1/s3',
-//   credentials: {
-//     accessKeyId: 'a9e55eb292b6c8148aef7ae5ee9131ee',
-//     secretAccessKey: '5dbace895be3a43dba4aafb9d97b9c377df7a53538c5d768e8f02cbbc7787b02',
-//   }
-// })
-
-
   // 입력 항목
   const title = ref('');
   const todo = ref('');
