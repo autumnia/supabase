@@ -171,10 +171,8 @@ const getApplyList = async () => {
       alert('지원내역 가져오기 실패');
       return;
     } 
-    // else {
-      job_apply_list.value = data;
-      // console.log('', job_apply_list.value);
-    // }
+    
+    job_apply_list.value = data;
 }
 
 // 받은 지원내역 가져오는 함수
@@ -187,10 +185,12 @@ const getRecieveList = async () => {
   
     if(error) {
       alert('받은 지원내역 가져오기 실패');
-    } else {
+      return;
+    } 
+    // else {
       job_recieve_list.value = data;
-      console.log('job_recieve_list:', job_recieve_list.value);
-    }  
+      // console.log('job_recieve_list:', job_recieve_list.value);
+    // }  
 }
 
 

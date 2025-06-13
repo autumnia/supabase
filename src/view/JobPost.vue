@@ -178,6 +178,19 @@ import { useAuth } from '../auth/auth';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 
+
+// import { S3Client } from '@aws-sdk/client-s3';
+// const client = new S3Client({
+//   forcePathStyle: true,
+//   region: 'ap-northeast-2',
+//   endpoint: 'https://jbqhxcketugieufneotb.supabase.co/storage/v1/s3',
+//   credentials: {
+//     accessKeyId: 'a9e55eb292b6c8148aef7ae5ee9131ee',
+//     secretAccessKey: '5dbace895be3a43dba4aafb9d97b9c377df7a53538c5d768e8f02cbbc7787b02',
+//   }
+// })
+
+
   // 입력 항목
   const title = ref('');
   const todo = ref('');
@@ -187,7 +200,8 @@ import supabase from '../supabase';
   const company_name = ref('');
   const location = ref('');
   const tel = ref('');
-  const img_url = ref(''); // 첨부한 사진은 storage에 저장하고 url을 저장
+
+  const previewImage = ref(null); 
 
   // 로그인 상태 확인
   const { isLogin, user, checkLoginStatus } = useAuth();
@@ -201,11 +215,12 @@ import supabase from '../supabase';
   const handleSubmit = async () => {
     isLoading.value = true;
 
-    // if(previewImage.value) {
-    //   await uploadImage();
-    // }
+    if(previewImage.value) {
+      await uploadImage();
+    }
 
-    const { error } = await supabase.from('job_posts')
+    const { error } = await supabase
+        .from('job_posts')
         .insert({ 
             title:        title.value,
             todo:         todo.value,
@@ -215,8 +230,8 @@ import supabase from '../supabase';
             company_name: company_name.value,
             location:     location.value,
             tel:          tel.value,
-            img_url:      'https://placehold.co/400X250',
-        })
+            img_url:      img_url.value || '', // 이미지 URL이 없으면 빈 문자열
+        });
 
     if(error) {
         console.error('등록 실패:', error);
@@ -230,8 +245,8 @@ import supabase from '../supabase';
     router.push('/job-list');
   }
 
-  let file = null; // 파일객체 저장 변수
-  const previewImage = ref(null);
+  let file = null; // 전역 파일객체 저장 변수
+
   const onFileChange = (e) => {
     file = e.target.files[0];
     // console.log(file);
@@ -242,6 +257,8 @@ import supabase from '../supabase';
     }
   }
 
+
+  const img_url = ref(''); // 첨부한 사진은 storage에 저장하고 url을 저장
   const uploadImage = async () => {
     const { data, error } = await supabase
       .storage
@@ -252,20 +269,23 @@ import supabase from '../supabase';
       console.log('file upload error:', file);
       console.log('업로드 오류:', error);
       alert('업로드 오류');
+      return null;
     }
-    else {
+
+    // else {
       console.log('uploaded file:', data)
       // 이미지 url 가져오기
       const { data: imgData } = supabase
         .storage
         .from('images')
         .getPublicUrl(file.name)
+        
       console.log('file url:', imgData.publicUrl)
 
       // 테이블에 저장할 이미지 URL 변수
       img_url.value = imgData.publicUrl;
       console.log('img_url:', img_url.value);
-    }
+    // }
 
   }
 
