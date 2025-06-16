@@ -210,7 +210,6 @@
     location.value = data.location;
     tel.value = data.tel;
     previewImage.value = data.img_url;
-
     prev_img_url.value = data.img_url; // 이전 이미지 URL
   }
 

@@ -222,7 +222,7 @@ import supabase from '../supabase';
         });
 
     if(error) {
-        console.error('등록 실패:', error);
+        // console.error('등록 실패:', error);
         alert(error.message || '등록 실패');
         return;
     } 
@@ -233,8 +233,8 @@ import supabase from '../supabase';
     router.push('/job-list');
   }
 
-  let file = null; // 전역 파일객체 저장 변수
 
+  let file = null; // 전역 파일객체 저장 변수
   const onFileChange = (e) => {
     file = e.target.files[0];
     // console.log(file);
@@ -254,14 +254,14 @@ import supabase from '../supabase';
       .upload (file.name, file, {cacheControl: '3600', upsert: false } )
     
     if(error) {
-      console.log('file upload error:', file);
-      console.log('업로드 오류:', error);
+      // console.log('file upload error:', file);
+      // console.log('업로드 오류:', error);
       alert('업로드 오류');
       return null;
     }
 
     // else {
-      console.log('uploaded file:', data)
+      // console.log('uploaded file:', data)
       // 이미지 url 가져오기
       const { data: imgData } = supabase
         .storage
@@ -272,7 +272,7 @@ import supabase from '../supabase';
 
       // 테이블에 저장할 이미지 URL 변수
       img_url.value = imgData.publicUrl;
-      console.log('img_url:', img_url.value);
+      // console.log('img_url:', img_url.value);
     // }
 
   }
@@ -284,7 +284,7 @@ import supabase from '../supabase';
   })
 
   onUnmounted( () => {
-    // console.log('unmounted');
+    // console.log('unmounted'); 
     // 메모리 누수 방지
     if(previewImage.value) {
       URL.revokeObjectURL(previewImage.value);

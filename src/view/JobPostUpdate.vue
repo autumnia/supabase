@@ -201,32 +201,36 @@
   const prev_img_url = ref(''); // 이전 이미지 url 
   const previewImage = ref(null); // 미리보기 이미지 변수
  
-   let file = null; // 파일 객체
+   
   
   const handleSubmit = async () => {
     isLoading.value = true;
 
-    // if(previewImage.value) {
-    //   // 기존 이미지 파일과 다른 경우(새로 첨부)
-    //   if(!prev_img_url.value.includes(file.name)) {
-    //     await uploadImage();
+    if(previewImage.value) {
+      // 기존 이미지 파일과 다른 경우(새로 첨부)
+      if(!prev_img_url.value.includes(file.name)) {
+        console.log("미리보기이미지: ", previewImage.value);
+        console.log("이전이미지 URL: "), img_url.value;
+        console.log( previewImage.value.split('/').pop() )
 
-    //     // 기존 이미지 삭제
-    //     const { data, error } = await supabase
-    //       .storage
-    //       .from('images')
-    //       .remove([prev_img_url.value.split('/').pop()])
-    //   } 
-    //   else {
-    //     // 파일 미첨부시 이전 이미지 사용
-    //     img_url.value = prev_img_url.value;
-    //   }
-    // }
+        // 기존 이미지 삭제
+        const { data, error } = await supabase
+          .storage
+          .from('images')
+          .remove( file.name )
+          // .remove( [prev_img_url.value.split('/').pop()] )
 
+        await uploadImage();
+
+      } 
+      else {
+        // 파일 미첨부시 이전 이미지 사용
+        img_url.value = prev_img_url.value;
+      }
+    }
 
 
     // job_posts 테이블 수정
-   
     const { error } = await supabase
       .from('job_posts')
       .update({ 
@@ -247,14 +251,13 @@
         return;
       } 
       
-      // else {
-        alert('글수정 성공');
-        isLoading.value = false;
+      alert('글수정 성공');
+      isLoading.value = false;
 
-        router.push('/job-list');
-      // }
+      router.push('/job-list');
   }
 
+  let file = null; // 파일 객체
   const onFileChange = (e) => {
     file = e.target.files[0];
     console.log('file:', file);
@@ -284,36 +287,34 @@
     company_name.value  = data.company_name;
     location.value      = data.location;
     tel.value           = data.tel;
-    previewImage.value  = data.img_url;
+    previewImage.value  = data.img_url; // 미리보기 이미지 URL
     prev_img_url.value  = data.img_url; // 이전 이미지 URL
   }
 
   const uploadImage = async () => {
+    console.log("업로드파일명: ", file.name);
+
+
     const { data, error } = await supabase
       .storage
       .from('images')
-      .upload(file.name, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
+      .upload(file.name, file, { cacheControl: '3600',upsert: false} )
     
       if(error) {
         alert('업로드 오류');
         return;
       }
 
-      //  else {
-        console.log('uploaded file:', data)
-        // 이미지 url 가져오기
-        const { data:imgData } = supabase
-        .storage
-        .from('images')
-        .getPublicUrl(file.name)
-        console.log('file url:', imgData.publicUrl)
+      // console.log('uploaded file:', data)
+      // 이미지 url 가져오기
+      const { data:imgData } = supabase
+      .storage
+      .from('images')
+      .getPublicUrl(file.name)
+      // console.log('file url:', imgData.publicUrl)
 
-        // 테이블에 저장할 이미지 URL 변수
-        img_url.value = imgData.publicUrl;
-      // }
+      // 테이블에 저장할 이미지 URL 변수
+      img_url.value = imgData.publicUrl;
   }
 
   // 마운트시 로그인 상태 확인하기
