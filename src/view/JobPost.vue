@@ -254,28 +254,29 @@ import supabase from '../supabase';
       .upload (file.name, file, {cacheControl: '3600', upsert: false } )
     
     if(error) {
-      // console.log('file upload error:', file);
+      // console.log('file upload error:', error.message);
       // console.log('업로드 오류:', error);
       alert('업로드 오류');
-      return null;
     }
 
     // else {
-      // console.log('uploaded file:', data)
       // 이미지 url 가져오기
       const { data: imgData } = supabase
         .storage
         .from('images')
         .getPublicUrl(file.name)
         
-      console.log('file url:', imgData.publicUrl)
-
+        console.log('file url:', imgData.publicUrl)
       // 테이블에 저장할 이미지 URL 변수
       img_url.value = imgData.publicUrl;
-      // console.log('img_url:', img_url.value);
     // }
-
   }
+
+
+
+
+
+
 
   // 마운트시 로그인 상태 확인하기
   onMounted(async() => {

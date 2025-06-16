@@ -197,20 +197,19 @@
   const company_name = ref('');
   const location = ref('');
   const tel = ref('');
+
   const img_url = ref('');
   const prev_img_url = ref(''); // 이전 이미지 url 
   const previewImage = ref(null); // 미리보기 이미지 변수
- 
-   
-  
+
   const handleSubmit = async () => {
     isLoading.value = true;
 
     if(previewImage.value) {
       // 기존 이미지 파일과 다른 경우(새로 첨부)
       if(!prev_img_url.value.includes(file.name)) {
-        console.log("미리보기이미지: ", previewImage.value);
-        console.log("이전이미지 URL: "), img_url.value;
+        // console.log("미리보기이미지: ", previewImage.value);
+        // console.log("이전이미지 URL: "), img_url.value;
         console.log( previewImage.value.split('/').pop() )
 
         // 기존 이미지 삭제
@@ -221,7 +220,6 @@
           // .remove( [prev_img_url.value.split('/').pop()] )
 
         await uploadImage();
-
       } 
       else {
         // 파일 미첨부시 이전 이미지 사용

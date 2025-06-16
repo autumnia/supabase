@@ -213,29 +213,27 @@
     prev_img_url.value = data.img_url; // 이전 이미지 URL
   }
 
+
   const uploadImage = async () => {
     const { data, error } = await supabase
       .storage
       .from('images')
-      .upload(file.name, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
+      .upload(file.name, file, {cacheControl: '3600',upsert: false})
     
-      if(error) {
-        alert('업로드 오류');
-      } else {
-        console.log('uploaded file:', data)
-        // 이미지 url 가져오기
-        const { data:imgData } = supabase
-        .storage
-        .from('images')
-        .getPublicUrl(file.name)
-        console.log('file url:', imgData.publicUrl)
+    if(error) {
+      alert('업로드 오류');
+    } else {
+      console.log('uploaded file:', data)
+      // 이미지 url 가져오기
+      const { data:imgData } = supabase
+      .storage
+      .from('images')
+      .getPublicUrl(file.name)
+      console.log('file url:', imgData.publicUrl)
 
-        // 테이블에 저장할 이미지 URL 변수
-        img_url.value = imgData.publicUrl;
-      }
+      // 테이블에 저장할 이미지 URL 변수
+      img_url.value = imgData.publicUrl;
+    }
   }
 
   // 마운트시 로그인 상태 확인하기

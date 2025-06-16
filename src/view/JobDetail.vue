@@ -233,8 +233,10 @@ const deleteImage = async () => {
     const { data, error } = await supabase
       .storage
       .from('images')
-      .remove([post.value.img_url.split('/').pop()]);
-    if(error) console.log('이미지 삭제 실패');
+      .remove ([post.value.img_url.split('/').pop()] );
+    
+    if(error) 
+      console.log('이미지 삭제 실패');
   // }
 }
 

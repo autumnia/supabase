@@ -152,6 +152,8 @@
         tel: tel.value,
         img_url: img_url.value,
       })
+
+      
       if(error) {
         alert(error.message || '등록 실패');
       } else {
