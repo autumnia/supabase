@@ -188,6 +188,7 @@ import supabase from '../supabase';
   const company_name = ref('');
   const location = ref('');
   const tel = ref('');
+  const prev_img_url = ref(''); // 기존 이미지 URL (수정시 사용)
 
   const previewImage = ref(null); 
 
@@ -203,8 +204,21 @@ import supabase from '../supabase';
   const handleSubmit = async () => {
     isLoading.value = true;
 
+    // console.log( '미리보기 이미지:',  previewImage.value);
     if(previewImage.value) {
-      await uploadImage();
+      // 기존 이미지 파일과 다른 경우(새로 첨부)
+      if(!prev_img_url.value.includes(file.name)) {
+        await uploadImage();
+
+        // 기존 이미지 삭제
+        const { data, error } = await supabase
+          .storage
+          .from('images')
+          .remove([prev_img_url.value.split('/').pop()])
+      } else {
+        // 파일 미첨부시 이전 이미지 사용
+        img_url.value = prev_img_url.value;
+      }
     }
 
     const { error } = await supabase
@@ -251,7 +265,11 @@ import supabase from '../supabase';
     const { data, error } = await supabase
       .storage
       .from('images')
-      .upload (file.name, file, {cacheControl: '3600', upsert: false } )
+      .upload (
+        file.name
+        , file
+        , {cacheControl: '3600', upsert: false } 
+      )
     
     if(error) {
       // console.log('file upload error:', error.message);
