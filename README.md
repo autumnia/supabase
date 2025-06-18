@@ -19,6 +19,7 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 * package.json
     "dependencies": {
         "date-fns": "^4.1.0",
+        "vite-plugin-pwa": "^1.0.0",
         "vue": "^3.5.13",
         "vue-router": "^4.5.1"
     },
